@@ -1,10 +1,10 @@
-# Config dedicated for module B
-# All the resources must be prefixed with `module-b-` to avoid conflicts
+# Config dedicated for module C
+# All the resources must be prefixed with `module-c-` to avoid conflicts
 
 version: 2.1
 
 parameters:
-  module-b-terraform-workflow:
+  module-c-terraform-workflow:
     type: string
     default: ""
 
@@ -90,20 +90,20 @@ jobs:
           working_directory: << parameters.working_directory >>
 
 workflows:
-  module-b-terraform-workflow:
+  module-c-terraform-workflow:
     when:
       not:
-        equal: [<< pipeline.parameters.module-b-terraform-workflow >>, ""]
+        equal: [<< pipeline.parameters.module-c-terraform-workflow >>, ""]
     jobs:
       - plan:
           context: aws-access
-          working_directory: << pipeline.parameters.module-b-terraform-workflow >>
+          working_directory: << pipeline.parameters.module-c-terraform-workflow >>
       - hold:
           type: approval
           requires:
             - plan
       - apply:
           context: aws-access
-          working_directory: << pipeline.parameters.module-b-terraform-workflow >>
+          working_directory: << pipeline.parameters.module-c-terraform-workflow >>
           requires:
             - hold

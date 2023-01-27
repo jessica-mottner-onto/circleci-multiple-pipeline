@@ -1,10 +1,10 @@
-# Config dedicated for module B
+# Config dedicated for module A
 # All the resources must be prefixed with `module-a-` to avoid conflicts
 
 version: 2.1
 
 parameters:
-  terraform-workflow:
+  module-a-terraform-workflow:
     type: string
     default: ""
 
@@ -93,17 +93,17 @@ workflows:
   module-a-terraform-workflow:
     when:
       not:
-        equal: [<< pipeline.parameters.terraform-workflow >>, ""]
+        equal: [<< pipeline.parameters.module-a-terraform-workflow >>, ""]
     jobs:
       - plan:
           context: aws-access
-          working_directory: << pipeline.parameters.terraform-workflow >>
+          working_directory: << pipeline.parameters.module-a-terraform-workflow >>
       - hold:
           type: approval
           requires:
             - plan
       - apply:
           context: aws-access
-          working_directory: << pipeline.parameters.terraform-workflow >>
+          working_directory: << pipeline.parameters.module-a-terraform-workflow >>
           requires:
             - hold
