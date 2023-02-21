@@ -91,19 +91,16 @@ jobs:
 
 workflows:
   module-a-terraform-workflow:
-#    when:
-#      not:
-#        equal: [<< pipeline.parameters.module-a-terraform-workflow >>, ""]
     jobs:
       - plan:
           context: aws-access
-          working_directory: . #<< pipeline.parameters.module-a-terraform-workflow >>
+          working_directory: "/module-a"
       - hold:
           type: approval
           requires:
             - plan
       - apply:
           context: aws-access
-          working_directory: . #<< pipeline.parameters.module-a-terraform-workflow >>
+          working_directory: "/module-a"
           requires:
             - hold
