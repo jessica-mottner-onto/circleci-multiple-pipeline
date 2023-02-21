@@ -91,9 +91,9 @@ jobs:
 
 workflows:
   module-a-terraform-workflow:
-    when:
-      not:
-        equal: [<< pipeline.parameters.module-a-terraform-workflow >>, ""]
+#    when:
+#      not:
+#        equal: [<< pipeline.parameters.module-a-terraform-workflow >>, ""]
     jobs:
       - plan:
           context: aws-access
