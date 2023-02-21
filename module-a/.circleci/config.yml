@@ -8,15 +8,6 @@ parameters:
     type: string
     default: ""
 
-commands:
-  install-terragrunt:
-    steps:
-      - run:
-          name: install terragrunt
-          command: |
-            wget -O /usr/local/bin/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.1/terragrunt_linux_amd64
-            chmod +x /usr/local/bin/terragrunt
-
 jobs:
   plan:
     description:
@@ -29,7 +20,6 @@ jobs:
     docker:
       - image: hashicorp/terraform:1.3.7
     steps:
-      - install-terragrunt
       - checkout
       - run:
           name: terraform formatting
@@ -38,12 +28,11 @@ jobs:
       - run:
           name: terraform initializing and validating
           command: |
-            terragrunt init -input=false
-            terragrunt validate
+            terraform init -input=false
           working_directory: << parameters.working_directory >>
       - run:
           name: terraform plan
-          command: terragrunt plan -out tfapply
+          command: terraform plan -out tfapply
           working_directory: << parameters.working_directory >>
       - persist_to_workspace:
           root: << parameters.working_directory >>
@@ -58,35 +47,12 @@ jobs:
     docker:
       - image: hashicorp/terraform:1.3.7
     steps:
-      - install-terragrunt
       - checkout
       - attach_workspace:
           at: << parameters.working_directory >>
       - run:
           name: terraform apply
-          command: terragrunt apply -auto-approve tfapply
-          working_directory: << parameters.working_directory >>
-  format-validate:
-    description:
-      Checks for correct formatting and validates the configuration in
-      the specified directory.
-    parameters:
-      working_directory:
-        description: Root directory of the Terraform configuration.
-        type: string
-    docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:1.0.3
-    steps:
-      - checkout
-      - run:
-          name: terraform formatting
-          command: terraform fmt
-          working_directory: << parameters.working_directory >>
-      - run:
-          name: terraform initializing and validating
-          command: |
-            terraform init -input=false
-            terraform validate
+          command: terraform apply -auto-approve tfapply
           working_directory: << parameters.working_directory >>
 
 workflows:
