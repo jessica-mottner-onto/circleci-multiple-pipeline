@@ -97,13 +97,13 @@ workflows:
     jobs:
       - plan:
           context: aws-access
-          working_directory: << pipeline.parameters.module-a-terraform-workflow >>
+          working_directory: . #<< pipeline.parameters.module-a-terraform-workflow >>
       - hold:
           type: approval
           requires:
             - plan
       - apply:
           context: aws-access
-          working_directory: << pipeline.parameters.module-a-terraform-workflow >>
+          working_directory: . #<< pipeline.parameters.module-a-terraform-workflow >>
           requires:
             - hold
