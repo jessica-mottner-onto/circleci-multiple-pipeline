@@ -22,11 +22,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: terraform formatting
-          command: terragrunt fmt
-          working_directory: << parameters.working_directory >>
-      - run:
-          name: terraform initializing and validating
+          name: terraform initializing
           command: |
             terraform init -input=false
           working_directory: << parameters.working_directory >>
